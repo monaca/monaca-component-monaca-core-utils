@@ -25,11 +25,11 @@ window.monaca = window.monaca || {};
         if (params) {
             window.cordova.exec(
                 function(r) {
-                  if (typeof params[0] === 'function') params[0](r); 
+                  if (typeof params[0] === 'function') params[0](r);
                   monaca.apiQueue.next();
                 },
                 function(r) {
-                  if (typeof params[1] === 'function') params[1](r); 
+                  if (typeof params[1] === 'function') params[1](r);
                   monaca.apiQueue.next();
                 },
                 params[2],
@@ -74,27 +74,27 @@ window.monaca = window.monaca || {};
             }
         }
     };
-    
+
     if (isAndroid) {
         monaca.retrieveUIStyle = function(id, name, success, failure) {
             monaca.apiQueue.exec(
-                function(style) { success(style[name]); } || function() { }, 
-                failure || function() { }, 
+                function(style) { success(style[name]); } || function() { },
+                failure || function() { },
                 "mobi.monaca.nativecomponent",
-                "retrieve", 
+                "retrieve",
                 [id]
             );
         };
-            
+
         monaca.updateUIStyle = function(id, name, value, success, failure) {
             var style = {};
             style[name] = value;
-            
+
             monaca.apiQueue.exec(
-                success || function() { }, 
-                failure || function() { }, 
+                success || function() { },
+                failure || function() { },
                 "mobi.monaca.nativecomponent",
-                "update", 
+                "update",
                 [id, style]
             );
         };
@@ -126,7 +126,7 @@ window.monaca = window.monaca || {};
     };
 
     var transitionPluginName = "Transit";
-    
+
     /**
      * Open new page.
      */
@@ -162,7 +162,7 @@ window.monaca = window.monaca || {};
         monaca.apiQueue.exec(null, null, transitionPluginName, "browse", [url]);
     };
 
-    /** 
+    /**
      * Load in current page.
      */
     monaca.load = function(path, options, param) {
@@ -211,6 +211,7 @@ window.monaca = window.monaca || {};
                     xhr.open("GET", path);
                     xhr.send();
                 }
+                window.orig_console[level](message);
             } else {
                 window.console[level](message);
             }
@@ -229,10 +230,14 @@ window.monaca = window.monaca || {};
             };
         }(method);
     }
-    
+
     /** Replace window.console if iOS **/
     if (isIOS) {
+      window.orig_console = window.console;
       window.console = window.monaca.console;
+      window.addEventListener( "error" , function (desc, page, line, char) {
+          monaca.console.sendLog("error", page, line, char, [desc]);
+      } , false );
     }
     /* Comment out for now
     window.onerror = function (desc, page, line, char) {
@@ -269,6 +274,12 @@ window.monaca = window.monaca || {};
         monaca.apiQueue.exec(function(result) { callback(result.deviceId); }, null, "Monaca", "getRuntimeConfiguration", []);
     };
 
+    monaca.getRuntimeConfiguration = function(success,failure) {
+        monaca.apiQueue.exec( success , failure , "Monaca" , "getRuntimeConfiguration" , []);
+    };
+
+
+
 })();
 
 /**
@@ -297,7 +308,7 @@ window.StatusBar = window.StatusBar || {};
     monaca.apiQueue.exec(null, null, "mobi.monaca.nativecomponent", 'showStatusBar', []);
   }
 
-  /* 
+  /*
     statusBarStyleDefault
     support : iOS6,iOS7
   */
@@ -305,7 +316,7 @@ window.StatusBar = window.StatusBar || {};
     monaca.apiQueue.exec(null, null, "mobi.monaca.nativecomponent", 'statusBarStyleDefault', []);
   }
 
-  /* 
+  /*
     statusBarStyleLightContent
     support : iOS7
   */
@@ -313,7 +324,7 @@ window.StatusBar = window.StatusBar || {};
     monaca.apiQueue.exec(null, null, "mobi.monaca.nativecomponent", 'statusBarStyleLightContent', []);
   }
 
-  /* 
+  /*
     statusBarStyleBlackOpaque
     support : iOS6
   */
@@ -321,7 +332,7 @@ window.StatusBar = window.StatusBar || {};
     monaca.apiQueue.exec(null, null, "mobi.monaca.nativecomponent", 'statusBarStyleBlackOpaque', []);
   }
 
-  /* 
+  /*
     statusBarStyleBlackTranslucent
     support : iOS6
   */
@@ -366,8 +377,8 @@ window.monaca.cloud = window.monaca.cloud || {};
                 monaca.cloud.Push.callbackData = null;
             }
         }
-    }; 
-    
+    };
+
 })();
 
 
