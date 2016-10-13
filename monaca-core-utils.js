@@ -204,12 +204,15 @@ window.monaca = window.monaca || {};
             }
 
             if (isIOS) {
-                var head = message.substr(0, 5);
-                if (window.monaca.isDeviceReady !== true || (head != 'ERROR' && head != 'WARN:')) {
-                    var xhr = new XMLHttpRequest();
-                    var path = "monaca://log?level=" + encodeURIComponent(level) + "&message=" + encodeURIComponent(message) + "&at=" + (new Date()).getTime();
-                    xhr.open("GET", path);
-                    xhr.send();
+                // not checked yet  or  confirmed MonacaDebugger
+                if (! monaca.isMonacaDebuggerChecked || monaca.isMonacaDebugger ) {
+                  var head = message.substr(0, 5);
+                  if (window.monaca.isDeviceReady !== true || (head != 'ERROR' && head != 'WARN:')) {
+                      var xhr = new XMLHttpRequest();
+                      var path = "monaca://log?level=" + encodeURIComponent(level) + "&message=" + encodeURIComponent(message) + "&at=" + (new Date()).getTime();
+                      xhr.open("GET", path);
+                      xhr.send();
+                  }
                 }
                 window.orig_console[level](message);
             } else {
@@ -281,6 +284,13 @@ window.monaca = window.monaca || {};
         monaca.apiQueue.exec( success , failure , "Monaca" , "getRuntimeConfiguration" , []);
     };
 
+    monaca.isMonacaDebuggerChecked = false;
+    monaca.isMonacaDebugger = null;
+
+    monaca.getRuntimeConfiguration( function(result) {
+        monaca.isMonacaDebuggerChecked = true;
+        monaca.isMonacaDebugger = !! result.isMonacaDebugger;
+    });
 
 
 })();
