@@ -207,7 +207,7 @@ window.monaca = window.monaca || {};
                 var head = message.substr(0, 5);
                 if (window.monaca.isDeviceReady !== true || (head != 'ERROR' && head != 'WARN:')) {
                     var xhr = new XMLHttpRequest();
-                    var path = "monaca://log?level=" + encodeURIComponent(level) + "&message=" + encodeURIComponent(message);
+                    var path = "monaca://log?level=" + encodeURIComponent(level) + "&message=" + encodeURIComponent(message) + "&at=" + (new Date()).getTime();
                     xhr.open("GET", path);
                     xhr.send();
                 }
@@ -236,8 +236,11 @@ window.monaca = window.monaca || {};
       window.orig_console = window.console;
       window.console = window.monaca.console;
       window.addEventListener( "error" , function (desc, page, line, char) {
-          monaca.console.sendLog("error", page, line, char, [desc]);
+          monaca.console.sendLog("error", null, null, null, [ { "message" : desc.message , "page" : desc.filename , "line" : desc.lineno , "char" : desc.colno   } ]);
       } , false );
+      // window.onerror = function (desc, page, line, char) {
+      //    monaca.console.sendLog("error", page, line, char, [ { "message" : desc , "page" : page , "line" : line, "char" : char } ] );
+      // };
     }
     /* Comment out for now
     window.onerror = function (desc, page, line, char) {
