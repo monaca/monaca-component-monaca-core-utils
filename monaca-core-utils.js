@@ -202,6 +202,9 @@ window.monaca = window.monaca || {};
             } else {
                 message = JSON.stringify(arguments[i]);
             }
+            if (message === undefined) {
+                message = "undefined";
+            }
 
             if (isIOS) {
                 // not checked yet  or  confirmed MonacaDebugger
