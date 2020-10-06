@@ -49,7 +49,10 @@ window.monaca = window.monaca || {};
      * Check User-Agent
      */
     var isAndroid = !!(navigator.userAgent.match(/Android/i));
-    var isIOS     = !!(navigator.userAgent.match(/iPhone|iPad|iPod/i));
+    var isIOS     = !!(
+        (navigator.userAgent.match(/iPhone|iPad|iPod/i))
+        || (navigator.userAgent.match(/Macintosh; Intel Mac OS X/i) && location.protocol.match(/^https?:/) === null) // iOS 13.0 iPad 9.7 inch
+    );
     monaca.isAndroid = isAndroid;
     monaca.isIOS     = isIOS;
 
