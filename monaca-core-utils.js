@@ -2,7 +2,7 @@
  * Monaca Core Utility Library
  * This library requires cordova.js
  *
- * @version 2.1.0
+ * @version 2.2.1
  * @author  Asial Corporation
  */
 window.monaca = window.monaca || {};
